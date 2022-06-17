@@ -187,6 +187,7 @@ public class RedBlackTree<T extends Comparable<? super T>> implements Tree<T> {
             T ele = findMin(current.right).element;
             // 此处需要将c暂存，防止丢失
             RedBlackNode<T> temp = current;
+            // todo 考虑实现一个方法，删除右树最小， 比如 removeMin(current.right);
             remove(ele);
             temp.element = ele;
         } else {
