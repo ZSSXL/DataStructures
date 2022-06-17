@@ -49,7 +49,7 @@ public class RedBlackTree<T extends Comparable<? super T>> implements Tree<T> {
 
     @Override
     public T findMin() throws UnderFlowException {
-        if (isEmpty()){
+        if (isEmpty()) {
             throw new UnderFlowException("Empty tree!!!");
         }
         return findMin(header.right).element;
@@ -57,7 +57,7 @@ public class RedBlackTree<T extends Comparable<? super T>> implements Tree<T> {
 
     @Override
     public T findMax() throws UnderFlowException {
-        if (isEmpty()){
+        if (isEmpty()) {
             throw new UnderFlowException("Empty tree!!!");
         }
         return null;
@@ -155,7 +155,7 @@ public class RedBlackTree<T extends Comparable<? super T>> implements Tree<T> {
                     parent.color = RED;
                     current.color = BLACK;
                     bro.color = BLACK;
-                } else {
+                } else if (isBlack(bro.left) || isBlack(bro.right)) {
                     rotateByColor(x);
                 }
                 // 当前节点下移
@@ -290,17 +290,33 @@ public class RedBlackTree<T extends Comparable<? super T>> implements Tree<T> {
     private void rotateByColor(T item) {
         if (compare(bro.element, parent) < 0) {
             // bro是左孩子
-            if (!isBlack(bro.right)) {
+            if (isBlack(bro.right)) {
+                bro.left.color = BLACK;
+                bro.color = RED;
+            } else {
                 parent.left = rotateWithRightChild(parent.left);
             }
-            grand = rotateWithLeftChild(parent);
+            if (compare(parent.element, grand) > 0) {
+                grand.right = rotateWithLeftChild(parent);
+            } else {
+                grand.left = rotateWithLeftChild(parent);
+            }
         } else {
             // bro是右孩子
-            if (!isBlack(bro.left)) {
+            if (isBlack(bro.left)) {
+                bro.right.color = BLACK;
+                bro.color = RED;
+            } else {
                 parent.right = rotateWithLeftChild(parent.right);
             }
-            grand = rotateWithRightChild(parent);
+            if (compare(parent.element, grand) < 0) {
+                grand.left = rotateWithRightChild(parent);
+            } else {
+                grand.right = rotateWithRightChild(parent);
+            }
         }
+        parent.color = BLACK;
+        current.color = RED;
     }
 
     /**
@@ -308,9 +324,17 @@ public class RedBlackTree<T extends Comparable<? super T>> implements Tree<T> {
      */
     private void rotateSingle() {
         if (compare(bro.element, parent) < 0) {
-            grand = rotateWithLeftChild(grand);
+            if (compare(parent.element, grand) < 0) {
+                grand.left = rotateWithLeftChild(grand.left);
+            } else {
+                grand.right = rotateWithLeftChild(grand.right);
+            }
         } else {
-            grand = rotateWithRightChild(grand);
+            if (compare(parent.element, grand) > 0) {
+                grand.right = rotateWithRightChild(grand.right);
+            } else {
+                grand.left = rotateWithRightChild(grand.left);
+            }
         }
     }
 
