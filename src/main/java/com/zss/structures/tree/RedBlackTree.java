@@ -60,7 +60,7 @@ public class RedBlackTree<T extends Comparable<? super T>> implements Tree<T> {
         if (isEmpty()) {
             throw new UnderFlowException("Empty tree!!!");
         }
-        return null;
+        return findMax(header.right).element;
     }
 
     /**
@@ -414,6 +414,18 @@ public class RedBlackTree<T extends Comparable<? super T>> implements Tree<T> {
     private RedBlackNode<T> findMin(RedBlackNode<T> t) {
         while (t.left != nullNode) {
             t = t.left;
+        }
+        return t;
+    }
+
+    /**
+     * 找到最大节点
+     * @param t 以当前节点为根节点
+     * @return maxNode
+     */
+    private RedBlackNode<T> findMax(RedBlackNode<T> t){
+        while (t.right != nullNode){
+            t = t.right;
         }
         return t;
     }
